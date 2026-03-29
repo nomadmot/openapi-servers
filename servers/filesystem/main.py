@@ -37,8 +37,12 @@ app.add_middleware(
 
 
 def normalize_path(requested_path: str) -> pathlib.Path:
-    requested = pathlib.Path(os.path.expanduser(requested_path)).resolve()
+    requested = pathlib.Path(requested_path).resolve()
+    print(f"Resolved path is {requested}")
+    # requested = pathlib.Path(os.path.expanduser(requested_path)).resolve()
     for allowed in ALLOWED_DIRECTORIES:
+        if allowed[-2:] == '/*':
+            allowed = allowed[0:-2]
         if str(requested).lower().startswith(allowed.lower()): # Case-insensitive check
             return requested
     raise HTTPException(
@@ -225,6 +229,7 @@ async def read_file(data: ReadFileRequest = Body(...)):
     Read the entire contents of a file and return as JSON.
     """
     path = normalize_path(data.path)
+    print(f"reading file {path}")
     try:
         file_content = path.read_text(encoding="utf-8")
         return ReadFileResponse(content=file_content) # Return Pydantic model instance
@@ -325,6 +330,7 @@ async def list_directory(data: ListDirectoryRequest = Body(...)):
     """
     List contents of a directory.
     """
+    print(f"Received request to list directory: {data.path}") # Debug log for incoming request
     dir_path = normalize_path(data.path)
     if not dir_path.is_dir():
         raise HTTPException(status_code=400, detail="Provided path is not a directory")
@@ -596,7 +602,7 @@ async def search_content(data: SearchContentRequest = Body(...)):
     return {"matches": results or ["No matches found"]}
 
 
-@app.get("/list_allowed_directories", summary="List access-permitted directories")
+@app.get("/", summary="List access-permitted directories")
 async def list_allowed_directories():
     """
     Show all directories this server can access.

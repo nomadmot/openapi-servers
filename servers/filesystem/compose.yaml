@@ -4,4 +4,7 @@ services:
       context: .
     ports:
       - 8000:8000
-
+    volumes:
+      - /Users/nomadmot/Library/CloudStorage/Dropbox/Apps/Investing:/investorlab
+      - /Users/nomadmot/Library/Mobile Documents/iCloud~md~obsidian/Documents:/obsidian
+      - /Users/nomadmot/Github:/github

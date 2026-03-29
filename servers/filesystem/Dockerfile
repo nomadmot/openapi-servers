@@ -24,25 +24,36 @@ ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/nonexistent" \
+    # --home "/nonexistent" \
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
     appuser
 
+COPY requirements.txt requirements.txt
+RUN ls -al
+RUN python -m pip install -r requirements.txt
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
+# RUN --mount=type=cache,target=/root/.cache/pip \
+#     --mount=type=bind,source=requirements.txt,target=requirements.txt \
+#     python -m pip install -r requirements.txt
 
 # Switch to the non-privileged user to run the application.
 USER appuser
 
 # Copy the source code into the container.
 COPY . .
+
+# # Put some test data into the container
+# ADD --chown=${UID} --chmod=777 config.py /github/
+# ADD --chown=${UID} --chmod=777 config.py /investorlab/
+# ADD --chown=${UID} --chmod=777 config.py /obsidian/
+# RUN echo "test file 1" >  /github/test1.txt
+# RUN echo "test file 2" > /investorlab/test2.txt
+# RUN echo "test file 3" > /obsidian/test3.txt
 
 # Expose the port that the application listens on.
 EXPOSE 8000
