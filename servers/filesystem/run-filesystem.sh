@@ -10,6 +10,6 @@ docker run -d \
     --publish 8000:8000 \
     --restart always \
     --mount type=bind,src=/$HOME/Library/CloudStorage/Dropbox/Apps/Investing,dst=/investorlab \
-    --mount type=bind,src=/$HOME/Library/'Mobile Documents'/iCloud~md~obsidian/Documents,dst=/obsidian \
+    --mount type=bind,src=/$HOME/Library/CloudStorage/Dropbox/Obsidian,dst=/obsidian \
     --mount type=bind,src=/$HOME/Github,dst=/github \
     localhost/filesystem:latest
