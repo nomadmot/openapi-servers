@@ -2,8 +2,8 @@ import os
 import pathlib
 
 # Constants
-ALLOWED_DIRECTORIES = ["/investorlab/*", "/obsidian/*", "/github/*",
+ALLOWED_DIRECTORIES = ["/github/*"]
     # str(pathlib.Path(os.path.expanduser("investorlab/*")).resolve()),
     # str(pathlib.Path(os.path.expanduser("obsidian/*")).resolve()),
     # str(pathlib.Path(os.path.expanduser("github/*")).resolve()),
-]  # 👈 Replace with your paths
+  # 👈 Replace with your paths
